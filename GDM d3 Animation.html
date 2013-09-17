@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<link rel="stylesheet" type="text/css" href="gdm_d3_animation.css">
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+var __debug_mode__ = false;
+
+var width = 1500,
+    height = 1500;
+    
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+</script>
+
+<script src="gdm_d3_animation_library.js"></script>
+<script src="path_maker.js"></script>
+<script src="path_follower.js"></script>
+<script src="network_drawer.js"></script>
+<script src="model_drawer.js"></script>
+<script>
+var __show_lines__ = true;
+d3.json("../../../JSON Dumps/fantasy_gdm.json", function(error, json) {
+//d3.json("../../../JSON Dumps/rob_mini_gdm.json", function(error, json) {
+  if (error) {
+    console.log (error.message)
+  } else {
+    svg.attr("model_count", json.models.length)
+       .attr("model_visible", "model0");
+    svg.on("click", function(d) {
+      // increment model_visible and make the relevant model visible
+      show_next_model(svg);
+      svg.selectAll(".network")
+           .attr("visibility", function(d) {
+             var g = d3.select(this);
+             var model_id = g.attr("id");
+             if (model_id == svg.attr("model_visible")) { return "visible"; } else { return "hidden"; }
+           });
+    })
+    draw_models(json);
+    d3.selectAll(".node").on("click", function(d) { 
+      __show_lines__ = !(__show_lines__);
+      d3.selectAll(".link").attr("visibility", __show_lines__ ? "inherit" : "hidden");
+      d3.event.stopPropagation();
+    });
+  }
+})
+
+function show_next_model(svg) {
+  var n = svg.attr("model_count");
+  var current = svg.attr("model_visible");
+  current = current.substr(5);
+  current = parseInt(current) + 1;
+  if (current == n) { current = 0; }
+  svg.attr("model_visible", "model" + current);
+}
+
+</script>
