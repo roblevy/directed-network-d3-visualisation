@@ -5,7 +5,7 @@
 </head>
 <body>
 <!--<script src="http://d3js.org/d3.v3.min.js"></script>-->
-<script src="../../../../../../d3js.org/d3.v3.min.js"></script>
+<script src="../../../../../d3js.org/d3.v3.min.js"></script>
 <script>
 var __debug_mode__ = false;
 
@@ -20,13 +20,13 @@ var svg = d3.select("body").append("svg")
 <script src="gdm_d3_animation_library.js"></script>
 <script src="path_maker.js"></script>
 <script src="path_follower.js"></script>
+<script src="label_maker.js"></script>
 <script src="network_drawer.js"></script>
 <script src="model_drawer.js"></script>
-<script src="label_maker.js"></script>
 <script>
-var json_file = "../../../../JSON Dumps/fantasy_gdm.json";
+var json_file = "../../../JSON Dumps/fantasy_gdm.json";
 if (__debug_mode__){
-  json_file = "../../../../JSON Dumps/test.json";
+  json_file = "../../../JSON Dumps/test.json";
 }
 d3.json(json_file, function(error, json) {
   json_data = json;

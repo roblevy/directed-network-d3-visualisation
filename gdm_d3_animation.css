@@ -1,3 +1,10 @@
 .node{
   stroke-width: 4px;
 }
+
+.node text {
+  font-family: sans-serif;
+  font-size: 10px;
+  dominant-baseline: middle;
+  fill: #808080;
+}
