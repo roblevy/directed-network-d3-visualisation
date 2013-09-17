@@ -1,7 +1,42 @@
 // Create a dummy data set with countries, and trade flows
 if (__debug_mode__) {
-
-  var data =
+  var data = {
+    "models":[
+      {
+        "nodes":
+        [
+          {"id":0,"x":98,"y":449,"size":20,"group":2,"parent":12},
+          {"id":1,"x":204,"y":566,"size":40,"group":3,"parent":12},
+          {"id":2,"x":66,"y":565,"size":35,"group":1,"parent":12}
+        ],
+        "links":
+        [
+            {"source": 0, "target": 2, "value": 300},
+            {"source": 1, "target": 2, "value": 100},
+            {"source": 2, "target": 0, "value": 200},
+            {"source": 1, "target": 0, "value": 120},
+            {"source": 0, "target": 1, "value": 30}    
+        ]      
+      },
+      {
+        "nodes":
+        [
+          {"id":0,"x":98,"y":449,"size":20,"group":2,"parent":12},
+          {"id":1,"x":204,"y":566,"size":40,"group":3,"parent":12},
+          {"id":2,"x":66,"y":565,"size":35,"group":1,"parent":12}
+        ],
+        "links":
+        [
+            {"source": 0, "target": 2, "value": 300},
+            {"source": 1, "target": 2, "value": 100},
+            {"source": 2, "target": 0, "value": 200},
+            {"source": 1, "target": 0, "value": 120},
+            {"source": 0, "target": 1, "value": 30}    
+        ]      
+      }
+    ]
+  };
+  var data2 =
   {
     "nodes":
     [
@@ -60,33 +95,32 @@ if (__debug_mode__) {
     ]
   }
 
-  draw_model(data);
+  //initialise(data);
 }
 
-function draw_models(data) {
-  var show_model = true;
-  var max_values = _max_values(data);
-  for (model in data.models) {
-    draw_model(data.models[model], model, show_model, max_values);
-    show_model = false;
-  }
+var show_model_number;
+var json_data;
+var __show_lines__ = true;
+var g;
+
+function initialise(data) {
+  json_data = data;
+  show_model_number = 0;
+  g = svg.append("g")
+        .attr("id", "network");
+  g.append("g")
+     .attr("id", "links");
+  g.append("g")
+     .attr("id","nodes");
+  max_values = _max_values(data);
+  svg.attr("max_node_size", max_values['node_size'])
+     .attr("max_link_value", max_values['link_value']);
+  draw_model(data.models[0])
 }
 
-function draw_model(data, i, show_model, max_values) {
-  // Defaults
-  // --------
-  i = set_default(i, 1);
-  show_model = set_default(show_model, true);
-  //max_values = set_default(max_values, _max_network_values(data));
-  // --------
+function draw_model(data) {
   _set_node_attributes(data);
-  draw_network(data, "model" + i, max_values, show_model);
-  // var top_level = _top_level(data);
-  // var sub_levels = _sub_levels(data, top_level);
-  // draw_network(top_level,"top_level",false, false, max_values);
-  // for (i in sub_levels) {
-    // draw_network(sub_levels[i],"sub_level" + i, true, true, max_values);
-  // }
+  draw_network(data, g);
 }
 
 function _set_node_attributes(data) {
@@ -154,4 +188,11 @@ function _max_values(data) {
     return d3.max(model.nodes, function(d) { return d.size; });
   });
   return max_values;
+}
+
+function _increment_model_number() {
+  show_model_number++;
+  if (show_model_number >= json_data['models'].length) {
+    show_model_number = 0;
+  }
 }
