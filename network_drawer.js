@@ -1,14 +1,10 @@
-var __max_node_size__ = 80;
-var __max_link_width__ = 15;
-var __max_node_stroke_width__ = 8;
-var __transition_duration__ = 1500;
-
 var colours = d3.scale.category10();
+var __biggest_node__;
 // Design the path follower:
 var __s = 2.2
 var path_follower_shape = svg.append("path")
-                               .attr("d", ("m 0 __s l __s -__s l -__s -__s "
-                                         + "l __s 0 l __s __s l -__s __s z").replace(/__s/g,__s));
+                               .attr("d", ("m -s s l s -s l -s -s "
+                                         + "l s 0 l s s l -s s z").replace(/s/g,__s));
 // var path_follower_shape = svg.append("path")
                                // .attr("d", ("m 0 __s l __s -__s l -__s -__s "
                                          // + "l " + 2 * __s + " __s z").replace(/__s/g,__s));
@@ -60,24 +56,25 @@ function draw_network(data, g) {
 
 function _draw_nodes(node_data) {
   
+  __biggest_node__ = svg.attr('max_node_size')
   // Defaults
   // --------
-  var max_size = svg.attr('max_node_size')
-  max_size = set_default(max_size, d3.max(node_data, function(d) { return d.size; }));
+  __biggest_node__ = set_default(__biggest_node__, d3.max(node_data, function(d) { return d.size; }));
   // --------
   var g = d3.select("#network #nodes");
   // Draw nodes
-  var nodes = g.selectAll("circle")
+  var nodes = g.selectAll("g.node")
      .data(node_data, function(d) { return d.id; } );
-  // -----
-  // Enter
-  // -----
-  var new_nodes = nodes.enter().append("circle");
-  _new_nodes(new_nodes, max_size);
   // ------
   // Update
   // ------
-  _update_nodes(nodes, max_size)
+  _update_nodes(nodes)
+
+  // -----
+  // Enter
+  // -----
+  var new_nodes = nodes.enter().append("g");
+  _new_nodes(new_nodes);
   
   // ----
   // Exit
@@ -89,34 +86,38 @@ function _draw_nodes(node_data) {
     .remove();
 }
 
-function _new_nodes(nodes, max_size) {
+function _new_nodes(nodes) {
   nodes.classed("node", true)
-   .attr("cx", function (d) { return d.x; })
-   .attr("cy", function (d) { return d.y; })
-   .attr("r", function (d) { return _get_radius(d.size, max_size); })
-   .attr("node-id", function (d) { return d.id; })
-   .attr("id", function(d) { return "node" + d.id; })
-   .attr("label", function(d) { return d.label; })
-   .style("fill", function(d) {
-     if (d.hasOwnProperty("colour")) { return d.colour; }
-     if (d.filled | !d.hasOwnProperty("filled")) { 
-        return colours(d.group); } else { return "white"; }
-   })
-   .style("stroke", function(d) {
-     if (d.coloured | !d.hasOwnProperty("coloured")) { 
-        return "none" } else { return "grey"; }
-   })
-   .style("stroke-width", function(d) {
-     if (!d.filled) {
-       return _get_radius(d.size, max_size) / __max_node_size__ * __max_node_stroke_width__ 
-     }
-   });
+     .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
+   .append("circle")
+     .attr("r", _get_radius)
+     .attr("node-id", function (d) { return d.id; })
+     .attr("id", function(d) { return "node" + d.id; })
+     .attr("label", function(d) { return d.label; })
+     .style("fill", function(d) {
+       if (d.hasOwnProperty("colour")) { return d.colour; }
+       if (d.filled | !d.hasOwnProperty("filled")) { 
+          return colours(d.group); } else { return "white"; }
+     })
+     .style("stroke", function(d) {
+       if (d.coloured | !d.hasOwnProperty("coloured")) { 
+          return "none" } else { return "grey"; }
+     })
+     .style("stroke-width", _node_stroke_width);
+  add_labels(nodes);
 }
 
-function _update_nodes(nodes, max_size) {
+function _update_nodes(nodes) {
   nodes.transition()
+  .select("circle").transition()
     .duration(__transition_duration__)
-    .attr("r", function (d) { return _get_radius(d.size, max_size); });
+    .attr("r", _get_radius)
+    .style("stroke-width", _node_stroke_width);
+  
+  nodes.select("text")
+    .transition()
+    .duration(__transition_duration__ * 1.3)
+    .styleTween("font-size", _font_size_tween);
 }
 
 function _draw_links(links) {
@@ -285,10 +286,16 @@ function _max_network_values(data) {
   return max_values;
 }
 
-function _get_radius(size, max_size) {
-  return Math.sqrt(size / max_size) * __max_node_size__;
+function _get_radius(d) {
+  return Math.sqrt(d.size / __biggest_node__) * __max_node_size__;
 }
 
 function _link_key(link) {
-  return link.source + "|" + link.target;
+  return link.source + "|" + link.target + "|" + link.group;
+}
+
+function _node_stroke_width(d) {
+  if (!d.filled) {
+     return _get_radius(d) / __max_node_size__ * __max_node_stroke_width__ 
+  }
 }

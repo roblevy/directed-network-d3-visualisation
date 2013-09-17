@@ -114,8 +114,6 @@ function animate_objects_along_path(object,
     _pulse_object(object_copy, pulse_size, pulse_duration);
     start_delay += (duration / n);
   }
-  // Hide the original object
-  //object.style("visibility", "hidden");
 }
 
 if (__debug_mode__) {
