@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<link rel="stylesheet" type="text/css" href="gdm_d3_animation.css">
+</head>
+<body>
+<!--<script src="http://d3js.org/d3.v3.min.js"></script>-->
+<script src="../../../../../../d3js.org/d3.v3.min.js"></script>
+<script>
+var __debug_mode__ = false;
+
+var width = 1500,
+    height = 1500;
+    
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+</script>
+
+<script src="gdm_d3_animation_library.js"></script>
+<script src="path_follower.js"></script>
+<script>
+    data = [{"id":"A","name":"jim"},{"id":"B","name":"dave"},{"id":"C","name":"pete"}];
+
+    g = svg.selectAll("g").data(data).enter().append("g");
+             
+    g.append("circle")
+          .attr("r", 3)
+          .attr("cx", 100)
+          .attr("cy", function(d,i) {return 100 + (i * 30);})
+    g.append("circle")
+          .attr("r", 3)
+          .attr("cx", 200)
+          .attr("cy", function(d,i) {return 100 + (i * 30);})
+          
+    console.log("circle data:");
+    d3.selectAll("g circle").each(function(d) { console.log(d.name); });     
+    data = [{"id":"A","name":"carol"},{"id":"B","name":"diane"},{"id":"C","name":"susan"}];
+    svg.selectAll("g").data(data);
+    svg.selectAll("g").selectAll("circle").data(function(d, i) { 
+      return [d]; })
+    console.log("after change, the group has:");
+    d3.selectAll("g").each(function(d) { console.log(d.name); });     
+    console.log("but the circles still have:");
+    d3.selectAll("g").selectAll("circle").each(function(d) { console.log(d.name); });     
+</script>

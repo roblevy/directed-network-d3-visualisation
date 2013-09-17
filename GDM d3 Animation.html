@@ -4,7 +4,8 @@
 <link rel="stylesheet" type="text/css" href="gdm_d3_animation.css">
 </head>
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<!--<script src="http://d3js.org/d3.v3.min.js"></script>-->
+<script src="../../../../../../d3js.org/d3.v3.min.js"></script>
 <script>
 var __debug_mode__ = false;
 
@@ -21,26 +22,24 @@ var svg = d3.select("body").append("svg")
 <script src="path_follower.js"></script>
 <script src="network_drawer.js"></script>
 <script src="model_drawer.js"></script>
+<script src="label_maker.js"></script>
 <script>
-var __show_lines__ = true;
-d3.json("../../../JSON Dumps/fantasy_gdm.json", function(error, json) {
-//d3.json("../../../JSON Dumps/rob_mini_gdm.json", function(error, json) {
+var json_file = "../../../../JSON Dumps/fantasy_gdm.json";
+if (__debug_mode__){
+  json_file = "../../../../JSON Dumps/test.json";
+}
+d3.json(json_file, function(error, json) {
+  json_data = json;
   if (error) {
     console.log (error.message)
   } else {
-    svg.attr("model_count", json.models.length)
-       .attr("model_visible", "model0");
+    initialise(json);
     svg.on("click", function(d) {
       // increment model_visible and make the relevant model visible
-      show_next_model(svg);
-      svg.selectAll(".network")
-           .attr("visibility", function(d) {
-             var g = d3.select(this);
-             var model_id = g.attr("id");
-             if (model_id == svg.attr("model_visible")) { return "visible"; } else { return "hidden"; }
-           });
+      _increment_model_number();
+      var data = json_data['models'][show_model_number];
+      draw_network(data)
     })
-    draw_models(json);
     d3.selectAll(".node").on("click", function(d) { 
       __show_lines__ = !(__show_lines__);
       d3.selectAll(".link").attr("visibility", __show_lines__ ? "inherit" : "hidden");

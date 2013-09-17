@@ -1,3 +1,4 @@
+var __path_follower_count__ = 4;
 var circle = svg.append("circle");
    // create the circle
    circle.attr("id", "to_animate")
@@ -23,13 +24,14 @@ if (__debug_mode__) {
   path.attr("d", basis_line(dummy_data))
       .attr("stroke", "blue")
       .attr("stroke-width", 10)
-      .attr("fill", "none");       
+      .attr("fill", "none");
+  animate_objects_along_path(circle, path);
 } 
 // ----------------------------------------------------
  
 function _match_style_object_to_path(object, path) {
   object.attr("fill", path.attr("stroke"))
-        .attr("scale_factor", path.attr("stroke-width"));
+        .attr("scale_factor", path.attr("stroke-width"))
 }
 
 function _animate_along_path(object, path, duration, offset) {
@@ -71,9 +73,10 @@ function _clone_object(object, i, svg_group) {
     svg_group = d3.select(object.node().parentNode);
   }
 	var cloned = svg_group.append(node_name)
-			     .attr("id", object.attr("id") + i);
+			     .classed("follower" + i, true)
+           .classed(object.attr("class"), true);
 	for (var j = 0; j < length; j++) {
-    if (attr[j].name != "id") {
+    if (attr[j].name != "id" & attr[j].name != "class") {
       cloned.attr(attr[j].name,attr[j].value);
     }
 	}
@@ -99,7 +102,7 @@ function animate_objects_along_path(object,
   pulse_size = set_default(pulse_size, 1.0); // 1.5);
   duration = set_default(duration, 3);
   pulse_duration = set_default(pulse_duration, 0.5);
-  n = set_default(n, 4);
+  n = set_default(n, __path_follower_count__);
   // --------
   object.classed("path_follower", true);
   _match_style_object_to_path(object, path);
