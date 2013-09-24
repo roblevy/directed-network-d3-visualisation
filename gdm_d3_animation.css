@@ -4,7 +4,6 @@
 
 .node text {
   font-family: sans-serif;
-  font-size: 10px;
-  dominant-baseline: middle;
+  dominant-baseline: central;
   fill: #808080;
 }

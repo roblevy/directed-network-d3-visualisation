@@ -10,8 +10,8 @@ function _show_label(d) {
         
       var t_grow = label.transition()
         .duration(transition_duration)
-        .style("font-size",calculate_text_size);
-       //.style("transform",function(d) {return "scale(" + calculate_text_size(d) + ")"});
+        .style("font-size","120px")
+        .style("opacity", 0.3);
     }
   }
 }
