@@ -97,7 +97,7 @@ function _new_nodes(nodes) {
      .style("fill", function(d) {
        if (d.hasOwnProperty("colour")) { return d.colour; }
        if (d.filled | !d.hasOwnProperty("filled")) { 
-          return colours(d.group); } else { return "white"; }
+          return colours(d.group); } else { return "#F0F0F0"; }
      })
      .style("stroke", function(d) {
        if (d.coloured | !d.hasOwnProperty("coloured")) { 
