@@ -5,11 +5,12 @@ function _show_label(d) {
       var label = d3.select(this).append("text");
       label
         .attr("text-anchor", "middle")
+        .attr("baseline-shift", "-3px")
         .text(d.label)
         .style("font-size","0px");
         
       var t_grow = label.transition()
-        .duration(transition_duration)
+        .duration(__transition_duration__)
         .style("font-size","120px")
         .style("opacity", 0.3);
     }

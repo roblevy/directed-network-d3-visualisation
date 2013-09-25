@@ -2,8 +2,18 @@
   stroke-width: 4px;
 }
 
-.node text {
+* {
   font-family: sans-serif;
   dominant-baseline: central;
+}
+
+.node text {
   fill: #808080;
+}
+
+#start_button {
+  height: 600px;
+  padding-top: 300px;
+  vertical-align: middle;
+  font-size: 32pt;
 }

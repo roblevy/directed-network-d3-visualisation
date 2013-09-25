@@ -164,8 +164,8 @@ function _new_links(links, max_value) {
   .attr("stroke", function (d) { return colours(d.group); })
   .attr("stroke-width", function (d) { 
     return d.value / max_value * __max_link_width__;;
-  })
-  .each(function(d) {
+  });
+  links.each(function(d) {
     animate_objects_along_path(path_follower_shape, 
                                d3.select(this), 
                                d3.select(this.parentElement));
