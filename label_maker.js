@@ -1,6 +1,14 @@
+function label_size(d) {
+  if (d.id == d.parent) {
+    return "120px";
+  } else {
+    return "20px";
+  }
+}
+
 function _show_label(d) {
   var transition_duration = 500;
-  if (d.id == d.parent & d.hasOwnProperty("label")) {
+  if (/*d.id == d.parent & */d.hasOwnProperty("label")) {
     if (d3.select(this).selectAll("text").empty()) {
       var label = d3.select(this).append("text");
       label
@@ -11,7 +19,7 @@ function _show_label(d) {
         
       var t_grow = label.transition()
         .duration(__transition_duration__)
-        .style("font-size","120px")
+        .style("font-size",label_size)
         .style("opacity", 0.3);
     }
   }

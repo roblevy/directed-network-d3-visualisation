@@ -1,6 +1,6 @@
 var __curvature__ = 280;
 var __radius_fraction__ = 10;
-var __scale_up_factor__ = 0.15;
+var __scale_up_factor__ = 0.05;
 var line_gen = d3.svg.line().interpolate("basis");
 
 // Create two dummy points for testing
